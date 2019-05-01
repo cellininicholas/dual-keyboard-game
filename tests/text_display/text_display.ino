@@ -1,4 +1,5 @@
 #include <U8g2lib.h>
+#include <PS2Keyboard.h>
 
 // pin definitions - change these to match your wiring
 // E =  Green
@@ -6,8 +7,9 @@
 // RS = Orange
 const int D1_PIN_E = 13, D1_PIN_RW = 12, D1_PIN_RS = 11;
 const int D2_PIN_E = 7, D2_PIN_RW = 6, D2_PIN_RS = 5;
-//const int D1_PIN_RW = 11;
-//const int D1_PIN_RS = 10;
+const int Keyboard_DataPin = 2, Keyboard_IRQpin =  3; // Data=Black, IQ=BLUE
+
+PS2Keyboard keyboard;
 
 // https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#constructor-name
 // Prefix:     U8G2
@@ -22,7 +24,8 @@ U8G2_ST7920_128X64_1_SW_SPI disp2(U8G2_R0, D2_PIN_E, D2_PIN_RW, D2_PIN_RS);
 
 const char letters[36] = {'a', 'b', 'c', 'd', 'e', 'f','g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 String line1Str = "Byron and Nick's";
-String line2Str = "KB GAME";
+String line2Str = "KB GAMES";
+int curCharIndex = 0;
 //bool curLine = true;
 
 // how long to spend at each step - higher wait_time = slower rotation
@@ -30,7 +33,14 @@ const int wait_time = 99;
 int wait_progress = 0;
 
 void setup() {
-  // put your setup code here, to run once:
+
+  // Keyboard setup
+  delay(1000);
+  keyboard.begin(Keyboard_DataPin, Keyboard_IRQpin, PS2Keymap_US);
+  Serial.begin(9600);
+  Serial.println("Keyboard Test:");
+
+  // Displays setup
   disp1.begin();
   disp2.begin();
 }
@@ -89,13 +99,51 @@ void update() {
     wait_progress = 0;
     
     // - = - = - = - = - = - =
-    int indexToChange = random(0, line2Str.length()-1);
-    line2Str.setCharAt(indexToChange, toupper(letters[random(0, 35)]));
+//    int indexToChange = random(0, line2Str.length()-1);
+//    line2Str.setCharAt(indexToChange, toupper(letters[random(0, 35)]));
 
   }
 }
 
+void keyboardLoop() {
+  if (keyboard.available()) {
+    
+    // read the next key
+    char c = keyboard.read();
+    
+    // check for some of the special keys
+    if (c == PS2_ENTER) {
+      Serial.println();
+    } else if (c == PS2_TAB) {
+      Serial.print("[Tab]");
+    } else if (c == PS2_ESC) {
+      Serial.print("[ESC]");
+    } else if (c == PS2_PAGEDOWN) {
+      Serial.print("[PgDn]");
+    } else if (c == PS2_PAGEUP) {
+      Serial.print("[PgUp]");
+    } else if (c == PS2_LEFTARROW) {
+      Serial.print("[Left]");
+    } else if (c == PS2_RIGHTARROW) {
+      Serial.print("[Right]");
+    } else if (c == PS2_UPARROW) {
+      Serial.print("[Up]");
+    } else if (c == PS2_DOWNARROW) {
+      Serial.print("[Down]");
+    } else if (c == PS2_DELETE) {
+      Serial.print("[Del]");
+    } else {
+      // otherwise, just print all normal characters
+      Serial.print(c);
+
+      line2Str.setCharAt(curCharIndex, toupper(c));
+      curCharIndex = (curCharIndex + 1) % line2Str.length();
+    }
+  }
+}
+
 void loop() {
+  keyboardLoop();
   // -------------------
   // Page buffer mode (Picture Loop)
   
@@ -106,7 +154,7 @@ void loop() {
   } while ( disp1.nextPage() );
 
   update();
-// ==============================
+  // ==============================
 
   disp2.firstPage();
   do {
@@ -114,7 +162,7 @@ void loop() {
     
   } while ( disp2.nextPage() );
 
-// ==============================
+  // ==============================
   
   update();
 
