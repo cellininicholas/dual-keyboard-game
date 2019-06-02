@@ -2,6 +2,7 @@
 #include <usbhub.h>
 
 #include "HIDKeyboardParser.h"
+#include "GameState.h"
 
 // pin definitions - change these to match your wiring
 // E =  Green
@@ -35,23 +36,20 @@ U8G2_ST7920_128X64_1_SW_SPI disp2(U8G2_R0, D2_PIN_E, D2_PIN_RW, D2_PIN_RS);
 
 const char letters[36] = {'a', 'b', 'c', 'd', 'e', 'f','g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 String line1Str = "Byron and Nick's";
-String line2Str = "KB GAMES";
-int curCharIndex = 0;
 //bool curLine = true;
-int btn1State, btn2State;
 
-// how long to spend at each step - higher wait_time = slower rotation
-const int wait_time = 99;
-int wait_progress = 0;
+
+// =========
+GameState game;
+// =========
 
 void setup() {
 
   // initialize the pushbutton pins as an inputs:
   pinMode(SWITCH_PIN_1, INPUT);
   pinMode(SWITCH_PIN_2, INPUT);
-
-  btn1State = digitalRead(SWITCH_PIN_1);
-  btn2State = digitalRead(SWITCH_PIN_2);
+  game.update(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
+//  game = GameState(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
 
   // Displays setup
   disp1.begin();
@@ -103,69 +101,52 @@ void drawOnDisplay(U8G2_ST7920_128X64_1_SW_SPI disp, bool isDisp1) {
 
 //    u8g2.setFont(u8g2_font_crox5tb_tf); // mf, mr
     disp.setFont(u8g2_font_tenstamps_mu); // mu=monospace,uppercase
-    disp.drawStr(4,22,line2Str.c_str());
+//    disp.drawStr(4,22,game.line2Str.c_str());
+    disp.drawStr(4,22,"FIX ME");
 
 
     disp.setFont(u8g2_font_tenthinnerguys_tf);
     disp.drawStr(4,45,"On Display for all");
 
-    
-    disp.setFont(u8g2_font_roentgen_nbp_tf);
-    disp.drawStr(109,0,String(wait_progress).c_str());
+//    disp.setFont(u8g2_font_roentgen_nbp_tf);
+//    disp.drawStr(109,0,String(wait_progress).c_str());
 
-    disp.drawStr(81,56, ("BTN="+String(isDisp1 ? btn2State : btn1State)).c_str());
-}
-
-void update() {
-  bool disp1Update = wait_progress % 2 == 1;
-  line1Str = disp1Update ? "Byron and..." : "Nick's...";
-  
-  if (wait_progress < wait_time) {
-    wait_progress++;   // don't change anything yet
-  } else {   // time to move the points
-    wait_progress = 0;
-    
-    // - = - = - = - = - = - =
-//    int indexToChange = random(0, line2Str.length()-1);
-//    line2Str.setCharAt(indexToChange, toupper(letters[random(0, 35)]));
-
-  }
+    disp.drawStr(81,56, ("BTN="+String(isDisp1 ? game.btn2State() : game.btn1State())).c_str());
 }
 
 void loop() {
-  Usb.Task();
   
-  // read the state of the pushbutton value:
-  int tmpVal = digitalRead(SWITCH_PIN_1);
-  if (tmpVal != btn1State) { btn1State = tmpVal; Serial.println("BTN 1 = " + String(tmpVal)); }
-
-  tmpVal = digitalRead(SWITCH_PIN_2);
-  if (tmpVal != btn2State) { btn2State = tmpVal; Serial.println("BTN 2 = " + String(tmpVal)); }
+  Usb.Task();
 
   // -------------------
   // Page buffer mode (Picture Loop)
   
   // ==============================
+  game.update(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
 
-  disp1.firstPage();
-  do {
-    drawOnDisplay(disp1, true);
-    
-  } while ( disp1.nextPage() );
-
-  update();
+  if (game.shouldRedrawDisp1()) {
+    disp1.firstPage();
+    do {
+      drawOnDisplay(disp1, true);
+      
+    } while ( disp1.nextPage() );
+    game.disp1WasDrawn();
+  }
+  
+  
   
   // ==============================
+  game.update(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
 
-  disp2.firstPage();
-  do {
-    drawOnDisplay(disp2, false);
-    
-  } while ( disp2.nextPage() );
+  if (game.shouldRedrawDisp2()) {
+    disp2.firstPage();
+    do {
+      drawOnDisplay(disp2, false);
+      
+    } while ( disp2.nextPage() ); 
+    game.disp2WasDrawn();
+  }
 
-  update();
-
-  // ==============================
 
 }
 
@@ -175,11 +156,7 @@ void KeyEvents::KeyStateChanged(char c,  bool isDown) {
   Serial.print(c);
   Serial.print(" ");
   Serial.println((isDown ? "DN":"UP"));
-
-  if (isDown) {
-    line2Str.setCharAt(curCharIndex, toupper(c));
-    curCharIndex = (curCharIndex + 1) % line2Str.length();
-  }
+  game.keyStateChanged(c, isDown);
 }
 
 void KeyEvents::ControlKeyStateChanged(MODIFIERKEYS beforeMod, MODIFIERKEYS afterMod) {
