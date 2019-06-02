@@ -3,12 +3,52 @@ Play keyboard games together
 
 
 ## Installation
+### Wiring
+
+I had QUITE a hard time getting both displays to work at the same time, I ended up just trying lots of different pin combinations.
+The pins below seem to work!
+
+My methodology was to make sure the RS pins were on PWM ports and try different things from there.
+Also, pins 5,6,7 seemed to work consistently with 1 display.
+```
+const int D1_PIN_E = 7, D1_PIN_RW = 8, D1_PIN_RS = 5;
+const int D2_PIN_E = 3, D2_PIN_RW = 4, D2_PIN_RS = 6;
+
+// 7 and 8 are digital and NOT PWM
+// 3 is PWN, 4 is digital and NOT PWM
+// 5 and 6 are BOTH PWM
+```
+
+### USB Host Shield
+Download the USB Host Shield Library
+https://github.com/felis/USB_Host_Shield_2.0
+
+#### Important learnings about using the USB Host Shield with Keyboards
+
+If you are using a keyboard that has a built in USB Hub (Female USB plugs on the keyboard itself)
+Make sure you include and use the "usbhub.h" header and USBHub class, otherwise the keyboard may not be recognised.
+It would perhaps be fine not to include "usbhub.h" if the keyboard has no USB plugs on it.
+```
+#include <usbhub.h>
+
+USB     Usb;
+USBHub Hub(&Usb);
+HIDUniversal Hid(&Usb);
+
+if (Usb.Init() == -1) Serial.println("OSC did not start.");
+delay( 200 );
+if (!Hid.SetReportParser(0, &KbdParser)) Serial.println("SetReportParser error");
+```
+
+
+## DEPRECATED Instructions
 ### PS2 Keyboard Library
 Download the PS2 Keyboard library
 https://github.com/PaulStoffregen/PS2Keyboard
 
 Place the downloaded 'PS2Keyboard' folder into the 'libraries' folder inside your Arduino Sketchbook folder...
 ~/Documents/Arduino ( <- default location, otherwise [Arduino -> Preferences] )
+
 
 This will allow your Arduino sketches to find the library by just including the lib like so:
 #include <PS2Keyboard.h>
