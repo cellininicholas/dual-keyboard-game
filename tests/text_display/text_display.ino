@@ -11,7 +11,7 @@
 const int D1_PIN_E = 7, D1_PIN_RW = 8, D1_PIN_RS = 5;
 const int D2_PIN_E = 3, D2_PIN_RW = 4, D2_PIN_RS = 6;
 
-const int SWITCH_PIN_1 = 4, SWITCH_PIN_2 = 3;
+const int SWITCH_PIN_1 = 9, SWITCH_PIN_2 = 10;
 
 // ------------------------------
 // USB KEYBOARD
@@ -56,14 +56,14 @@ void setup() {
   disp2.begin();
 
   // Keyboard setup
-  delay(1000);
-//  keyboard.begin(Keyboard_DataPin, Keyboard_IRQpin, PS2Keymap_US);
-//  keyboard.begin(Keyboard_DataPin, Keyboard_IRQpin);
+//  delay(1000);
 //  Serial.begin(115200);
 //  while (!Serial) yield();
   
-  Serial.println("Keyboard Setup Start...");
-  if (Usb.Init() == -1) Serial.println("USB OSC did not start.");
+//  Serial.println("Keyboard Setup Start...");
+  if (Usb.Init() == -1) { 
+//    Serial.println("USB OSC did not start.");
+  }
   delay( 200 );
   HidKeyboard.SetReportParser(0, &Prs);
 }
@@ -97,13 +97,16 @@ void drawOnDisplay(U8G2_ST7920_128X64_1_SW_SPI disp, bool isDisp1) {
     disp.setFont(u8g2_font_tenthinnerguys_tf);
     disp.setFontPosTop();
     
-    disp.drawStr(4,7,line1Str.c_str());
+//    disp.drawStr(4,7,line1Str.c_str());
+    disp.drawStr(4,7, !isDisp1 ? "The Best..." : "...Typing Game");
+    
 
 //    u8g2.setFont(u8g2_font_crox5tb_tf); // mf, mr
     disp.setFont(u8g2_font_tenstamps_mu); // mu=monospace,uppercase
 //    disp.drawStr(4,22,game.line2Str.c_str());
-    disp.drawStr(4,22,"FIX ME");
-
+//    disp.drawStr(4,22,"FIX ME");
+    disp.drawStr(4,22,isDisp1 ? game.player1Str() : game.player2Str() );
+//    disp.drawStr(4,22,game.player1Str());
 
     disp.setFont(u8g2_font_tenthinnerguys_tf);
     disp.drawStr(4,45,"On Display for all");
@@ -111,7 +114,8 @@ void drawOnDisplay(U8G2_ST7920_128X64_1_SW_SPI disp, bool isDisp1) {
 //    disp.setFont(u8g2_font_roentgen_nbp_tf);
 //    disp.drawStr(109,0,String(wait_progress).c_str());
 
-    disp.drawStr(81,56, ("BTN="+String(isDisp1 ? game.btn2State() : game.btn1State())).c_str());
+//    disp.setFont(u8g2_font_roentgen_nbp_tf);
+//    disp.drawStr(81,56, ("BTN="+String(isDisp1 ? game.btn2State() : game.btn1State())).c_str());
 }
 
 void loop() {
@@ -124,38 +128,44 @@ void loop() {
   // ==============================
   game.update(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
 
+  // Never Redraw both displays in the same loop!
+  // Let's reserve time for the Usb.Task() to run
+  // It's more important that our data is correct, rather than the displays are UpToDate
+  // - - - - - - - - - - -
+  // TODO: Try different methods to draw the displays...
+  
   if (game.shouldRedrawDisp1()) {
+//    Serial.println("Draw Display 1");
+    game.displayDrawingStateChanged(true, true);
     disp1.firstPage();
     do {
+      Usb.Task();
       drawOnDisplay(disp1, true);
-      
     } while ( disp1.nextPage() );
-    game.disp1WasDrawn();
+    game.displayDrawingStateChanged(true, false);
   }
-  
-  
-  
-  // ==============================
-  game.update(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
 
+  // TODO: If we are running a Usb.Task() during the display draw loop, the data could change, resulting in inconsistent data displayed
+  //       We need to store the data while the displays are updating
+  
   if (game.shouldRedrawDisp2()) {
+//    Serial.println("Draw Display 2");
+    game.displayDrawingStateChanged(false, true);
     disp2.firstPage();
     do {
+      Usb.Task();
       drawOnDisplay(disp2, false);
-      
     } while ( disp2.nextPage() ); 
-    game.disp2WasDrawn();
+    game.displayDrawingStateChanged(false, false);
   }
-
-
 }
 
 // ---------------------
 
 void KeyEvents::KeyStateChanged(char c,  bool isDown) {
-  Serial.print(c);
-  Serial.print(" ");
-  Serial.println((isDown ? "DN":"UP"));
+//  Serial.print(c);
+//  Serial.print(" ");
+//  Serial.println((isDown ? "DN":"UP"));
   game.keyStateChanged(c, isDown);
 }
 
