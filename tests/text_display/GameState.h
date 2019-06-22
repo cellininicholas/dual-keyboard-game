@@ -1,8 +1,13 @@
 #if !defined(__GAMESTATE_H__)
 #define __GAMESTATE_H__
 
+#include "GameMode.h"
+
 class GameState {
   private:
+    GameMode *gameModes;
+    GameMode *currentGameMode;
+
     const int CHAR_BUFFER_SIZE = 32;
     const int CHAR_WINDOW_SIZE = 8;
   
@@ -40,6 +45,8 @@ class GameState {
     // Initialiser
     GameState();
     GameState(bool btn1On, bool btn2On);
+
+    void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1);
 
     bool shouldRedrawDisp1() { return _disp1DatDirty; }
     bool shouldRedrawDisp2() { return _disp2DatDirty; }

@@ -68,55 +68,55 @@ void setup() {
   HidKeyboard.SetReportParser(0, &Prs);
 }
 
-void drawOnDisplay(U8G2_ST7920_128X64_1_SW_SPI disp, bool isDisp1) {
-  //    u8g2.drawLine(c1, r1, c2, r2);   // draw the line from (c1, r1) to (c2, r2)
-//    u8g2.setFont(u8g2_font_ncenB14_tr);
+// void drawOnDisplay(U8G2_ST7920_128X64_1_SW_SPI disp, bool isDisp1) {
+//   //    u8g2.drawLine(c1, r1, c2, r2);   // draw the line from (c1, r1) to (c2, r2)
+// //    u8g2.setFont(u8g2_font_ncenB14_tr);
 
-    // SetFont
-    // ----------
-    // The 2 letters are <purpose><char set>
-    // PURPOSE
-    // t_ - Transparent gylphs with variable width
-    // m_ - Monospace/fixed width glyphs
-    // h_ - Glyphs with variable width and common height
-    // 8_ - Monospace/fixed width glyphs in a 8x8 box
-    // CHAR SET
-    // _f - The font includes up to 256 glyphs.
-    // _r - Only glyphs on the range of the ASCII codes 32 to 127 are included in the font.
-    // _u - Only glyphs on the range of the ASCII codes 32 to 95 (uppercase chars) are included in the font.
-    // _n - Only numbers and extra glyphs for writing date and time strings are included in the font.
+//     // SetFont
+//     // ----------
+//     // The 2 letters are <purpose><char set>
+//     // PURPOSE
+//     // t_ - Transparent gylphs with variable width
+//     // m_ - Monospace/fixed width glyphs
+//     // h_ - Glyphs with variable width and common height
+//     // 8_ - Monospace/fixed width glyphs in a 8x8 box
+//     // CHAR SET
+//     // _f - The font includes up to 256 glyphs.
+//     // _r - Only glyphs on the range of the ASCII codes 32 to 127 are included in the font.
+//     // _u - Only glyphs on the range of the ASCII codes 32 to 95 (uppercase chars) are included in the font.
+//     // _n - Only numbers and extra glyphs for writing date and time strings are included in the font.
 
-    // Our fonts:
-    // https://github.com/olikraus/u8g2/wiki/fntgrpgeoff#tenstamps
-    // https://github.com/olikraus/u8g2/wiki/fntgrpgeoff#tenthinnerguys
-    // FONT MODE
-    // https://github.com/olikraus/u8g2/wiki/u8g2reference#setfontmode
+//     // Our fonts:
+//     // https://github.com/olikraus/u8g2/wiki/fntgrpgeoff#tenstamps
+//     // https://github.com/olikraus/u8g2/wiki/fntgrpgeoff#tenthinnerguys
+//     // FONT MODE
+//     // https://github.com/olikraus/u8g2/wiki/u8g2reference#setfontmode
 
-//    u8g2.setFont(u8g2_font_helvR24_te); // tf, tr, tn, te?
-//    u8g2.setFont(u8g2_font_helvB18_tf); // tf, tr, tn, te?
-    disp.setFont(u8g2_font_tenthinnerguys_tf);
-    disp.setFontPosTop();
+// //    u8g2.setFont(u8g2_font_helvR24_te); // tf, tr, tn, te?
+// //    u8g2.setFont(u8g2_font_helvB18_tf); // tf, tr, tn, te?
+//     disp.setFont(u8g2_font_tenthinnerguys_tf);
+//     disp.setFontPosTop();
     
-//    disp.drawStr(4,7,line1Str.c_str());
-    disp.drawStr(4,7, !isDisp1 ? "The Best..." : "...Typing Game");
+// //    disp.drawStr(4,7,line1Str.c_str());
+//     disp.drawStr(4,7, !isDisp1 ? "The Best..." : "...Typing Game");
     
 
-//    u8g2.setFont(u8g2_font_crox5tb_tf); // mf, mr
-    disp.setFont(u8g2_font_tenstamps_mu); // mu=monospace,uppercase
-//    disp.drawStr(4,22,game.line2Str.c_str());
-//    disp.drawStr(4,22,"FIX ME");
-    disp.drawStr(4,22,isDisp1 ? game.player1Str() : game.player2Str() );
-//    disp.drawStr(4,22,game.player1Str());
+// //    u8g2.setFont(u8g2_font_crox5tb_tf); // mf, mr
+//     disp.setFont(u8g2_font_tenstamps_mu); // mu=monospace,uppercase
+// //    disp.drawStr(4,22,game.line2Str.c_str());
+// //    disp.drawStr(4,22,"FIX ME");
+//     disp.drawStr(4,22,isDisp1 ? game.player1Str() : game.player2Str() );
+// //    disp.drawStr(4,22,game.player1Str());
 
-    disp.setFont(u8g2_font_tenthinnerguys_tf);
-    disp.drawStr(4,45,"On Display for all");
+//     disp.setFont(u8g2_font_tenthinnerguys_tf);
+//     disp.drawStr(4,45,"On Display for all");
 
-//    disp.setFont(u8g2_font_roentgen_nbp_tf);
-//    disp.drawStr(109,0,String(wait_progress).c_str());
+// //    disp.setFont(u8g2_font_roentgen_nbp_tf);
+// //    disp.drawStr(109,0,String(wait_progress).c_str());
 
-//    disp.setFont(u8g2_font_roentgen_nbp_tf);
-//    disp.drawStr(81,56, ("BTN="+String(isDisp1 ? game.btn2State() : game.btn1State())).c_str());
-}
+// //    disp.setFont(u8g2_font_roentgen_nbp_tf);
+// //    disp.drawStr(81,56, ("BTN="+String(isDisp1 ? game.btn2State() : game.btn1State())).c_str());
+// }
 
 void loop() {
   
@@ -140,7 +140,8 @@ void loop() {
     disp1.firstPage();
     do {
       Usb.Task();
-      drawOnDisplay(disp1, true);
+      // drawOnDisplay(disp1, true);
+      game.draw(&disp1, true);
     } while ( disp1.nextPage() );
     game.displayDrawingStateChanged(true, false);
   }
@@ -154,7 +155,8 @@ void loop() {
     disp2.firstPage();
     do {
       Usb.Task();
-      drawOnDisplay(disp2, false);
+      // drawOnDisplay(disp2, false);
+      game.draw(&disp2, false);
     } while ( disp2.nextPage() ); 
     game.displayDrawingStateChanged(false, false);
   }

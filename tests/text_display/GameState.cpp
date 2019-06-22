@@ -14,6 +14,10 @@ void GameState::InitCharBuffers() {
       _player2CharWindow[i] = ' ';
     }
   }
+
+  gameModes = new GameMode[1];
+  gameModes[0] = GameMode();
+  currentGameMode = &gameModes[0];
 }
 
 GameState::GameState() {
@@ -23,6 +27,12 @@ GameState::GameState() {
 GameState::GameState(bool btn1On, bool btn2On) : _btn1State(btn1On), _btn2State(btn2On) {
   //  Serial.println("GameState Init");
   InitCharBuffers();
+}
+
+void GameState::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
+  if (currentGameMode == NULL) { return; }
+
+  currentGameMode->draw(disp, isDisp1);
 }
 
 // --------------------
@@ -38,7 +48,7 @@ char* GameState::updateCharWindow(char *buf, char *window, int charIndex) {
 char* GameState::player1Str() {
   // V- Function below is called from GameState::displayDrawingStateChanged()
 //  updateCharWindow(_player1CharBuffer, _player1CharWindow, _charIndexP1);
-  
+
   return _player1CharWindow;
 }
 char* GameState::player2Str() {
