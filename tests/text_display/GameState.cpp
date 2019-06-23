@@ -1,5 +1,6 @@
 #include "GameState.h"
 #include <ctype.h>
+#include "LongWordMode.h"
 
 void GameState::InitCharBuffers() {
   _player1CharBuffer = new char[CHAR_BUFFER_SIZE];
@@ -15,9 +16,10 @@ void GameState::InitCharBuffers() {
     }
   }
 
-  gameModes = new GameMode[1];
-  gameModes[0] = GameMode();
-  currentGameMode = &gameModes[0];
+  // gameModes = (GameMode *)malloc(1*sizeof(GameMode *));
+  gameModes = new GameMode*[1];
+  gameModes[0] = new LongWordMode();
+  currentGameMode = gameModes[0];
 }
 
 GameState::GameState() {

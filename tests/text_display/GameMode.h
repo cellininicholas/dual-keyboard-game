@@ -7,9 +7,9 @@ class GameMode {
     
 
   protected:
-    void CommonInit();
+    virtual void CommonInit();
 
-    GameView *views;
+    GameView **views;
     GameView *currentView;
 
   public:

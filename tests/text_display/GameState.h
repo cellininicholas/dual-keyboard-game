@@ -5,7 +5,7 @@
 
 class GameState {
   private:
-    GameMode *gameModes;
+    GameMode **gameModes;
     GameMode *currentGameMode;
 
     const int CHAR_BUFFER_SIZE = 32;
