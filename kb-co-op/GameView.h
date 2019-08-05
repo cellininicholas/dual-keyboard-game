@@ -3,11 +3,23 @@
 
 #include <U8g2lib.h>
 
+class GameModeDelegate {
+  public:
+  virtual char *GetCharacterBuffer(bool isP1);
+  virtual char *GetCharacterWindow(bool isP1);
+};
+
+class GameViewDelegate: public GameModeDelegate {
+  public:
+  // virtual (char *) GetCharacterBuffer(bool isP1);
+};
+
 class GameView {
   private:
-    
 
   protected:
+    GameViewDelegate *viewDelegate;
+  
     virtual void CommonInit();
     void drawNHearts(U8G2_ST7920_128X64_1_SW_SPI *disp, int heartCount);
     void drawNHeartsHeight8(U8G2_ST7920_128X64_1_SW_SPI *disp, int heartCount);
@@ -20,7 +32,7 @@ class GameView {
     virtual void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1);
 
     // Initialiser
-    GameView();
+    GameView(GameModeDelegate *del);
     // GameView(bool btn1On, bool btn2On);
   
 };

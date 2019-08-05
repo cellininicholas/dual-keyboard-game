@@ -35,7 +35,7 @@ U8G2_ST7920_128X64_1_SW_SPI disp2(U8G2_R0, D2_PIN_E, D2_PIN_RW, D2_PIN_RS);
 // ------------------------------
 
 const char letters[36] = {'a', 'b', 'c', 'd', 'e', 'f','g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
-String line1Str = "Byron and Nick's";
+String line1Str = "Nick's";
 //bool curLine = true;
 
 
@@ -46,9 +46,10 @@ GameState game;
 void setup() {
 
   // initialize the pushbutton pins as an inputs:
-  pinMode(SWITCH_PIN_1, INPUT);
-  pinMode(SWITCH_PIN_2, INPUT);
-  game.update(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
+  // pinMode(SWITCH_PIN_1, INPUT);
+  // pinMode(SWITCH_PIN_2, INPUT);
+  game.SetupGameModes();
+  game.update();
 //  game = GameState(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
 
   // Displays setup

@@ -13,7 +13,7 @@ class LongWordMode : public GameMode {
   public:
 
     // Initialiser
-    LongWordMode();
+    LongWordMode(GameModeDelegate *del);
     // LongWordMode(bool btn1On, bool btn2On);
   
 };

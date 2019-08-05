@@ -16,7 +16,7 @@ class LWGameView : public GameView {
     void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) override;
 
     // Initialiser
-    LWGameView();
+    LWGameView(GameModeDelegate *del);
     // LWGameView(bool btn1On, bool btn2On);
   
 };

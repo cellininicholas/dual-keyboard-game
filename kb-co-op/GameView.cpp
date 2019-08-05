@@ -5,7 +5,7 @@ void GameView::CommonInit() {
   
 }
 
-GameView::GameView() {
+GameView::GameView(GameModeDelegate *del) : viewDelegate((GameViewDelegate *)del) {
   CommonInit();
 }
 

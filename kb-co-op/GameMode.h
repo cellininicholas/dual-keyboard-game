@@ -2,12 +2,16 @@
 #define __GAMEMODE_H__
 #include "GameView.h"
 
+// - - - - - - - - - - -
+// GameModeDelegate interface declared inside GameView.h
+// - - - - - - - - - - -
+
 class GameMode {
-  private:
-    
+  private:    
 
   protected:
     virtual void CommonInit();
+    GameModeDelegate *modeDelegate;
 
     GameView **views;
     GameView *currentView;
@@ -17,7 +21,7 @@ class GameMode {
     void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1);
 
     // Initialiser
-    GameMode();
+    GameMode(GameModeDelegate *del);
     // GameMode(bool btn1On, bool btn2On);
   
 };

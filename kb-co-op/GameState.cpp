@@ -2,6 +2,13 @@
 #include <ctype.h>
 #include "LongWordMode.h"
 
+char * GameState::GetCharacterBuffer(bool isP1) {
+  return isP1 ? _player1CharBuffer : _player2CharBuffer;
+}
+char * GameState::GetCharacterWindow(bool isP1) {
+  return isP1 ? _player1CharWindow : _player2CharWindow;
+}
+
 void GameState::InitCharBuffers() {
   _player1CharBuffer = new char[CHAR_BUFFER_SIZE];
   _player2CharBuffer = new char[CHAR_BUFFER_SIZE];
@@ -16,10 +23,6 @@ void GameState::InitCharBuffers() {
     }
   }
 
-  // gameModes = (GameMode *)malloc(1*sizeof(GameMode *));
-  gameModes = new GameMode*[1];
-  gameModes[0] = new LongWordMode();
-  currentGameMode = gameModes[0];
 }
 
 GameState::GameState() {
@@ -29,6 +32,12 @@ GameState::GameState() {
 GameState::GameState(bool btn1On, bool btn2On) : _btn1State(btn1On), _btn2State(btn2On) {
   //  Serial.println("GameState Init");
   InitCharBuffers();
+}
+
+void GameState::SetupGameModes() {
+  gameModes = new GameMode*[1];
+  gameModes[0] = new LongWordMode(this);
+  currentGameMode = gameModes[0];
 }
 
 void GameState::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {

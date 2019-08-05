@@ -3,7 +3,11 @@
 
 #include "GameMode.h"
 
-class GameState {
+// - - - - - - - - - - -
+// GameViewDelegate implements GameModeDelegate
+// - - - - - - - - - - -
+
+class GameState: public GameViewDelegate {
   private:
     GameMode **gameModes;
     GameMode *currentGameMode;
@@ -37,14 +41,18 @@ class GameState {
     void InitCharBuffers();
     char* updateCharWindow(char *buf, char *window, int charIndex);
 
+    // GameViewDelegate
+    char *GetCharacterBuffer(bool isP1);
+    char *GetCharacterWindow(bool isP1);
+
   protected:
-    
 
   public:
   
     // Initialiser
     GameState();
     GameState(bool btn1On, bool btn2On);
+    void SetupGameModes();
 
     void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1);
 

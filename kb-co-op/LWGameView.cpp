@@ -5,7 +5,7 @@ void LWGameView::CommonInit() {
   
 }
 
-LWGameView::LWGameView() {
+LWGameView::LWGameView(GameModeDelegate *del) : GameView(del) {
   CommonInit();
 }
 
@@ -15,11 +15,14 @@ LWGameView::LWGameView() {
 // FONT MODE
 // https://github.com/olikraus/u8g2/wiki/u8g2reference#setfontmode
 void LWGameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
+  char *charWindow = viewDelegate->GetCharacterWindow(isDisp1);
+  
   // extern const uint8_t u8g2_font_tenstamps_mu[] U8G2_FONT_SECTION("u8g2_font_tenstamps_mu");
   disp->setDrawColor(1);
   disp->setFontPosTop();
   disp->setFont(u8g2_font_tenstamps_mu); // height=15,mu=monospace,uppercase
-  disp->drawStr(4,22,"LONGWORD" );
+  // disp->drawStr(4,22,"LONGWORD" );
+  disp->drawStr(4,22,charWindow);
 
   if (!isDisp1) {
     drawNHeartsHeight8(disp, 12);
