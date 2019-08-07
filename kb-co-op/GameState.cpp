@@ -75,12 +75,46 @@ char* GameState::player2Str() {
 // --------------------
 
 /*
+ P1 Key Mappings 
+  ---------------
+    Y->T H->G N->B
+    U->Y J->H M->N
+    I->U K->J ,->M
+    O->I L->K .->,
+    P->O ;->L /->.
+    [->P
+ */
+int shiftedUpperCaseCharForPlayer1(int inChar) {
+  switch(inChar) {
+    case 44: return 84; // Y->T
+    case 72: return 71; // H->G
+    case 78: return 66; // N->B
+    case 85: return 89; // U->Y
+    case 0: return 0; // J->H
+    case 0: return 0; // M->N
+    case 0: return 0; // I->U
+    case 0: return 0; // K->J
+    case 0: return 0; // ,->M
+    case 0: return 0; // O->I
+    case 0: return 0; // L->K
+    case 0: return 0; // .->,
+    case 0: return 0; // P->O
+    case 0: return 0; // ;->L
+    case 0: return 0; // /->.
+    case 0: return 0; // [->P
+    default: return 46; // .
+  }
+}
+
+/*
 Player 1 Keys
 -------------
- T   G   B   Y   H   N   U   J   M   I   K   O   L   P
- B   G   H   I   J   K   L   M   N   O   P   T   U   Y   (ordered)
-066 071 072 073 074 075 076 077 078 079 080 084 085 089
-66(1), 71-80(10), 84-85(2), 89(1)
+ Y   H   N   U   J   M   I   K   O   L   P   [   ;   ,   /
+ ,   /   ;   H   I   J   K   L   M   N   O   P   U   Y   [   (ordered)
+044 047 059 072 073 074 075 076 077 078 079 080 085 089 091
+44(1), 47(1), 59(1), 72-80(9), 85(1), 89(1), 91(1)
+
+
 
 Player 2 Keys
 -------------
@@ -93,8 +127,8 @@ void GameState::keyStateChanged(char c,  bool isDown) {
   
   if (isDown) {
     int uc = toupper(c);
-    if (uc < 65 || uc > 90) { return; } // Check if A-Z
-    bool isP1Char = (uc>70 && uc<81) || (uc>83 && uc<86) || uc==66 || uc==89;
+    if ((uc < 65 || uc > 90) && uc != 44 && uc != 47 && uc != 59 && uc != 91) { return; } // Check if A-Z ( ,/;[ )
+    bool isP1Char = !((uc>64 && uc<72) || (uc>80 && uc<85) || (uc>85 && uc<89) || uc==90);
 
     if (isP1Char) {
       int nextIndexP1 = (_charIndexP1 + 1) % CHAR_BUFFER_SIZE;
