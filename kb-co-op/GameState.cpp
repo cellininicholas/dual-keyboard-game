@@ -2,10 +2,15 @@
 #include <ctype.h>
 #include "LongWordMode.h"
 
-char * GameState::GetCharacterBuffer(bool isP1) {
+void GameState::setDisplayDirty(bool isDis1) {
+  if (isDis1) { _disp1DatDirty = true; } 
+  else        { _disp2DatDirty = true; }
+}
+
+char * GameState::getCharacterBuffer(bool isP1) {
   return isP1 ? _player1CharBuffer : _player2CharBuffer;
 }
-char * GameState::GetCharacterWindow(bool isP1) {
+char * GameState::getCharacterWindow(bool isP1) {
   return isP1 ? _player1CharWindow : _player2CharWindow;
 }
 
@@ -22,7 +27,6 @@ void GameState::InitCharBuffers() {
       _player2CharWindow[i] = ' ';
     }
   }
-
 }
 
 GameState::GameState() {
@@ -70,19 +74,41 @@ char* GameState::player2Str() {
 }
 // --------------------
 
-void GameState::keyStateChanged(char c,  bool isDown) {
-  if (isDown) {
-//    line2Str.setCharAt(curCharIndex, toupper(c));
-    int nextIndexP1 = (_charIndexP1 + 1) % CHAR_BUFFER_SIZE;
-    int nextIndexP2 = (_charIndexP2 + 1) % CHAR_BUFFER_SIZE;
-    
-    _player1CharBuffer[nextIndexP1] = toupper(c);
-    _player2CharBuffer[nextIndexP2] = toupper(c);
-    _charIndexP1 = nextIndexP1;
-    _charIndexP2 = nextIndexP2;
+/*
+Player 1 Keys
+-------------
+ T   G   B   Y   H   N   U   J   M   I   K   O   L   P
+ B   G   H   I   J   K   L   M   N   O   P   T   U   Y   (ordered)
+066 071 072 073 074 075 076 077 078 079 080 084 085 089
+66(1), 71-80(10), 84-85(2), 89(1)
 
-    _disp1DatDirty = true;
-    _disp2DatDirty = true;
+Player 2 Keys
+-------------
+ T   G   B   Q   A   Z   W   S   X   E   D   C   R   F   V   
+ A   B   C   D   E   F   G   Q   R   S   T   V   W   X   Z
+065 066 067 068 069 070 071 081 082 083 084 086 087 088 090
+65-71(7), 81-84(4), 86-88(3), 90(1)
+ */
+void GameState::keyStateChanged(char c,  bool isDown) {
+  
+  if (isDown) {
+    int uc = toupper(c);
+    if (uc < 65 || uc > 90) { return; } // Check if A-Z
+    bool isP1Char = (uc>70 && uc<81) || (uc>83 && uc<86) || uc==66 || uc==89;
+
+    if (isP1Char) {
+      int nextIndexP1 = (_charIndexP1 + 1) % CHAR_BUFFER_SIZE;
+      _player1CharBuffer[nextIndexP1] = uc;
+      _charIndexP1 = nextIndexP1;
+      // _disp1DatDirty = true;
+    } else {
+      int nextIndexP2 = (_charIndexP2 + 1) % CHAR_BUFFER_SIZE;
+      _player2CharBuffer[nextIndexP2] = uc;
+      _charIndexP2 = nextIndexP2;
+      // _disp2DatDirty = true;
+    }
+    if (currentGameMode == NULL) { return; }
+    currentGameMode->keyPressed(c, uc, isP1Char);
   }
 }
 
@@ -90,36 +116,23 @@ void GameState::displayDrawingStateChanged(bool disp1, bool isDrawing) {
   if (disp1) {
     if (!_disp1IsDrawing && isDrawing) { updateCharWindow(_player1CharBuffer, _player1CharWindow, _charIndexP1); }
     _disp1IsDrawing = isDrawing;
+    if (isDrawing) { _disp1DatDirty = false; }
   } else {
     if (!_disp2IsDrawing && isDrawing) { updateCharWindow(_player2CharBuffer, _player2CharWindow, _charIndexP2); }
     _disp2IsDrawing = isDrawing;
+    if (isDrawing) { _disp2DatDirty = false; }
   }
 }
 
 void GameState::update() {
-  bool disp1Update = _wait_progress % 2 == 1;
-//  line1Str = disp1Update ? "Byron and..." : "Nick's...";
-  
-  if (_wait_progress < wait_time) {
-    _wait_progress++;   // don't change anything yet
-  } else {   // time to move the points
-    _wait_progress = 0;
-    
-//    _disp1DatDirty = true;
-//    _disp2DatDirty = true;
-    
-    // - = - = - = - = - = - =
-//    int indexToChange = random(0, line2Str.length()-1);
-//    line2Str.setCharAt(indexToChange, toupper(letters[random(0, 35)]));
 
-  }
 }
 
 void GameState::update(bool btn1On, bool btn2On) {
 
   // read the state of the pushbutton value:
-  if (btn1On != _btn1State) { _btn1State = btn1On; _disp1DatDirty = true; }
-  if (btn2On != _btn2State) { _btn2State = btn2On; _disp2DatDirty = true; }
+//  if (btn1On != _btn1State) { _btn1State = btn1On; _disp1DatDirty = true; }
+//  if (btn2On != _btn2State) { _btn2State = btn2On; _disp2DatDirty = true; }
 
   update();
 }

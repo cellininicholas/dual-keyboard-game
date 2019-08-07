@@ -1,6 +1,6 @@
 {
     "board": "arduino:avr:uno",
-    "sketch": "text_display.ino",
+    "sketch": "kb-co-op.ino",
     "port": "/dev/cu.usbmodemFD121",
     "output": "/Users/nicholascellini/Development/arduino-build-outputs/keyboard-game"
 }

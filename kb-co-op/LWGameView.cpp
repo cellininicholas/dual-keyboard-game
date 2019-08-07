@@ -9,13 +9,17 @@ LWGameView::LWGameView(GameModeDelegate *del) : GameView(del) {
   CommonInit();
 }
 
+void LWGameView::keyPressed(char c, int upperChar, bool isP1) {
+
+}
+
 // FONTS
 // https://github.com/olikraus/u8g2/wiki/fntgrpgeoff#tenstamps
 // https://github.com/olikraus/u8g2/wiki/fntgrpgeoff#tenthinnerguys
 // FONT MODE
 // https://github.com/olikraus/u8g2/wiki/u8g2reference#setfontmode
 void LWGameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
-  char *charWindow = viewDelegate->GetCharacterWindow(isDisp1);
+  char *charWindow = viewDelegate->getCharacterWindow(isDisp1);
   
   // extern const uint8_t u8g2_font_tenstamps_mu[] U8G2_FONT_SECTION("u8g2_font_tenstamps_mu");
   disp->setDrawColor(1);

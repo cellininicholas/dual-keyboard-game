@@ -12,6 +12,8 @@ class LongWordMode : public GameMode {
 
   public:
 
+    void keyPressed(char c, int upperChar, bool isP1) override;
+
     // Initialiser
     LongWordMode(GameModeDelegate *del);
     // LongWordMode(bool btn1On, bool btn2On);

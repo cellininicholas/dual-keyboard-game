@@ -1,5 +1,5 @@
 #include <U8g2lib.h>
-#include <usbhub.h>
+//#include <usbhub.h>
 
 #include "HIDKeyboardParser.h"
 #include "GameState.h"
@@ -16,7 +16,7 @@ const int SWITCH_PIN_1 = 9, SWITCH_PIN_2 = 10;
 // ------------------------------
 // USB KEYBOARD
 USB     Usb;
-USBHub     Hub(&Usb);
+//USBHub     Hub(&Usb);
 HIDBoot<USB_HID_PROTOCOL_KEYBOARD>    HidKeyboard(&Usb);
 KeyEvents keyEvents;
 HIDKeyboardParser Prs(&keyEvents);
@@ -57,13 +57,13 @@ void setup() {
   disp2.begin();
 
   // Keyboard setup
-//  delay(1000);
-//  Serial.begin(115200);
-//  while (!Serial) yield();
+ delay(1000);
+ Serial.begin(115200);
+ while (!Serial) yield();
   
-//  Serial.println("Keyboard Setup Start...");
+  Serial.println("Keyboard Setup Start...");
   if (Usb.Init() == -1) { 
-//    Serial.println("USB OSC did not start.");
+    Serial.println("USB OSC did not start.");
   }
   delay( 200 );
   HidKeyboard.SetReportParser(0, &Prs);
@@ -136,7 +136,7 @@ void loop() {
   // TODO: Try different methods to draw the displays...
   
   if (game.shouldRedrawDisp1()) {
-//    Serial.println("Draw Display 1");
+    Serial.println("Draw Display 1");
     game.displayDrawingStateChanged(true, true);
     disp1.firstPage();
     do {
@@ -151,7 +151,7 @@ void loop() {
   //       We need to store the data while the displays are updating
   
   if (game.shouldRedrawDisp2()) {
-//    Serial.println("Draw Display 2");
+    Serial.println("Draw Display 2");
     game.displayDrawingStateChanged(false, true);
     disp2.firstPage();
     do {
@@ -169,6 +169,9 @@ void KeyEvents::KeyStateChanged(char c,  bool isDown) {
 //  Serial.print(c);
 //  Serial.print(" ");
 //  Serial.println((isDown ? "DN":"UP"));
+//  int upperC = toupper(c);
+//  Serial.print(upperC);
+//  Serial.println(c);
   game.keyStateChanged(c, isDown);
 }
 

@@ -42,8 +42,9 @@ class GameState: public GameViewDelegate {
     char* updateCharWindow(char *buf, char *window, int charIndex);
 
     // GameViewDelegate
-    char *GetCharacterBuffer(bool isP1);
-    char *GetCharacterWindow(bool isP1);
+    void setDisplayDirty(bool isDis1);
+    char *getCharacterBuffer(bool isP1);
+    char *getCharacterWindow(bool isP1);
 
   protected:
 

@@ -12,6 +12,12 @@ GameMode::GameMode(GameModeDelegate *del) : modeDelegate(del) {
   CommonInit();
 }
 
+void GameMode::keyPressed(char c, int upperChar, bool isP1) {
+  if (currentView == NULL) { return; }
+
+  currentView->keyPressed(c, upperChar, isP1);
+}
+
 void GameMode::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
   if (currentView == NULL) { return; }
 

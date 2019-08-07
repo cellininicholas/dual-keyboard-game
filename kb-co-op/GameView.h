@@ -5,8 +5,9 @@
 
 class GameModeDelegate {
   public:
-  virtual char *GetCharacterBuffer(bool isP1);
-  virtual char *GetCharacterWindow(bool isP1);
+  virtual void setDisplayDirty(bool isDis1);
+  virtual char *getCharacterBuffer(bool isP1);
+  virtual char *getCharacterWindow(bool isP1);
 };
 
 class GameViewDelegate: public GameModeDelegate {
@@ -29,6 +30,7 @@ class GameView {
 
   public:
   
+    virtual void keyPressed(char c, int upperChar, bool isP1);
     virtual void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1);
 
     // Initialiser

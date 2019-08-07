@@ -18,6 +18,7 @@ class GameMode {
 
   public:
   
+    virtual void keyPressed(char c, int upperChar, bool isP1);
     void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1);
 
     // Initialiser

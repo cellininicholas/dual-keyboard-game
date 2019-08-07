@@ -9,6 +9,10 @@ GameView::GameView(GameModeDelegate *del) : viewDelegate((GameViewDelegate *)del
   CommonInit();
 }
 
+void GameView::keyPressed(char c, int upperChar, bool isP1) {
+
+}
+
 void GameView::drawNHearts(U8G2_ST7920_128X64_1_SW_SPI *disp, int heartCount) {
   drawNHeartsHeight16(disp, heartCount);
 }
