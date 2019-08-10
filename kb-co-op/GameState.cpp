@@ -86,22 +86,22 @@ char* GameState::player2Str() {
  */
 int shiftedUpperCaseCharForPlayer1(int inChar) {
   switch(inChar) {
-    case 44: return 84; // Y->T
+    case 89: return 84; // Y->T
     case 72: return 71; // H->G
     case 78: return 66; // N->B
     case 85: return 89; // U->Y
-    case 0: return 0; // J->H
-    case 0: return 0; // M->N
-    case 0: return 0; // I->U
-    case 0: return 0; // K->J
-    case 0: return 0; // ,->M
-    case 0: return 0; // O->I
-    case 0: return 0; // L->K
-    case 0: return 0; // .->,
-    case 0: return 0; // P->O
-    case 0: return 0; // ;->L
-    case 0: return 0; // /->.
-    case 0: return 0; // [->P
+    case 74: return 72; // J->H
+    case 77: return 78; // M->N
+    case 73: return 85; // I->U
+    case 75: return 74; // K->J
+    case 44: return 77; // ,->M
+    case 79: return 73; // O->I
+    case 76: return 75; // L->K
+    case 46: return 44; // .->,
+    case 80: return 79; // P->O
+    case 59: return 76; // ;->L
+    case 47: return 46; // /->.
+    case 91: return 80; // [->P
     default: return 46; // .
   }
 }
@@ -127,10 +127,11 @@ void GameState::keyStateChanged(char c,  bool isDown) {
   
   if (isDown) {
     int uc = toupper(c);
-    if ((uc < 65 || uc > 90) && uc != 44 && uc != 47 && uc != 59 && uc != 91) { return; } // Check if A-Z ( ,/;[ )
-    bool isP1Char = !((uc>64 && uc<72) || (uc>80 && uc<85) || (uc>85 && uc<89) || uc==90);
+    if ((uc < 65 || uc > 90) && uc != 44 && uc != 46 && uc != 47 && uc != 59 && uc != 91) { return; } // Check if A-Z ( .,/;[ )
+    bool isP1Char = !((uc>64 && uc<72) || (uc>80 && uc<85) || (uc>85 && uc<89) || uc==90); // NOT P2 keys
 
     if (isP1Char) {
+      uc = shiftedUpperCaseCharForPlayer1(uc);
       int nextIndexP1 = (_charIndexP1 + 1) % CHAR_BUFFER_SIZE;
       _player1CharBuffer[nextIndexP1] = uc;
       _charIndexP1 = nextIndexP1;
