@@ -1,6 +1,7 @@
 {
-    "board": "arduino:avr:uno",
+    "board": "arduino:avr:mega",
     "sketch": "kb-co-op.ino",
     "port": "/dev/cu.usbmodemFD121",
-    "output": "/Users/nicholascellini/Development/arduino-build-outputs/keyboard-game"
+    "output": "/Users/nicholascellini/Development/arduino-build-outputs/keyboard-game",
+    "configuration": "cpu=atmega2560"
 }

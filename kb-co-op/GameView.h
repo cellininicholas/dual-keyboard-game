@@ -8,6 +8,7 @@ class GameModeDelegate {
   virtual void setDisplayDirty(bool isDis1);
   virtual char *getCharacterBuffer(bool isP1);
   virtual char *getCharacterWindow(bool isP1);
+  virtual const char *getRandBalanced8CharWord();
 };
 
 class GameViewDelegate: public GameModeDelegate {

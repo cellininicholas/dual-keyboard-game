@@ -3,7 +3,7 @@
 
 #include "GameView.h"
 
-class LWGameView : public GameView {
+class LongWordGameView : public GameView {
   private:
     
 
@@ -17,8 +17,8 @@ class LWGameView : public GameView {
     void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) override;
 
     // Initialiser
-    LWGameView(GameModeDelegate *del);
-    // LWGameView(bool btn1On, bool btn2On);
+    LongWordGameView(GameModeDelegate *del);
+    // LongWordGameView(bool btn1On, bool btn2On);
   
 };
 

@@ -3,8 +3,11 @@
 
 void LongWordMode::CommonInit() {
   views = new GameView*[1];
-  views[0] = new LWGameView(modeDelegate);
+  views[0] = new LongWordGameView(modeDelegate);
   currentView = views[0];
+
+  // currentWord = new char[LONG_WORD_SIZE];
+  // wordIndexHistory = new int[HISTORY_SIZE];
 }
 
 LongWordMode::LongWordMode(GameModeDelegate *del) : GameMode(del) {

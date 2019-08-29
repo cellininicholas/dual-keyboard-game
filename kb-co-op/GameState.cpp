@@ -1,18 +1,25 @@
 #include "GameState.h"
 #include <ctype.h>
 #include "LongWordMode.h"
+#include "Words.h"
+
+// ----------------------------------------------------
+// ---------------- GameViewDelegate ------------------
 
 void GameState::setDisplayDirty(bool isDis1) {
   if (isDis1) { _disp1DatDirty = true; } 
   else        { _disp2DatDirty = true; }
 }
-
 char * GameState::getCharacterBuffer(bool isP1) {
   return isP1 ? _player1CharBuffer : _player2CharBuffer;
 }
 char * GameState::getCharacterWindow(bool isP1) {
   return isP1 ? _player1CharWindow : _player2CharWindow;
 }
+const char * GameState::getRandBalanced8CharWord() {
+  return NULL;
+}
+// ----------------------------------------------------
 
 void GameState::InitCharBuffers() {
   _player1CharBuffer = new char[CHAR_BUFFER_SIZE];

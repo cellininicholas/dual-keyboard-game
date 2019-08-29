@@ -12,7 +12,7 @@ class GameState: public GameViewDelegate {
     GameMode **gameModes;
     GameMode *currentGameMode;
 
-    const int CHAR_BUFFER_SIZE = 32;
+    const int CHAR_BUFFER_SIZE = 16;
     const int CHAR_WINDOW_SIZE = 8;
   
     // HARDWARE
@@ -34,8 +34,8 @@ class GameState: public GameViewDelegate {
     char *_player2CharWindow;
   
     // how long to spend at each step - higher wait_time = slower rotation
-    const int wait_time = 99;
-    int _wait_progress = 0;
+//    const int wait_time = 99;
+//    int _wait_progress = 0;
 //    int _curCharIndex = 0;
 
     void InitCharBuffers();
@@ -45,6 +45,7 @@ class GameState: public GameViewDelegate {
     void setDisplayDirty(bool isDis1);
     char *getCharacterBuffer(bool isP1);
     char *getCharacterWindow(bool isP1);
+    const char *getRandBalanced8CharWord();
 
   protected:
 

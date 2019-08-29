@@ -1,15 +1,15 @@
-#include "LWGameView.h"
+#include "LongWordGameView.h"
 // #include <ctype.h>
 
-void LWGameView::CommonInit() {
+void LongWordGameView::CommonInit() {
   
 }
 
-LWGameView::LWGameView(GameModeDelegate *del) : GameView(del) {
+LongWordGameView::LongWordGameView(GameModeDelegate *del) : GameView(del) {
   CommonInit();
 }
 
-void LWGameView::keyPressed(char c, int upperChar, bool isP1) {
+void LongWordGameView::keyPressed(char c, int upperChar, bool isP1) {
 
 }
 
@@ -18,7 +18,7 @@ void LWGameView::keyPressed(char c, int upperChar, bool isP1) {
 // https://github.com/olikraus/u8g2/wiki/fntgrpgeoff#tenthinnerguys
 // FONT MODE
 // https://github.com/olikraus/u8g2/wiki/u8g2reference#setfontmode
-void LWGameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
+void LongWordGameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
   char *charWindow = viewDelegate->getCharacterWindow(isDisp1);
   
   // extern const uint8_t u8g2_font_tenstamps_mu[] U8G2_FONT_SECTION("u8g2_font_tenstamps_mu");
@@ -59,7 +59,7 @@ void LWGameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
   
 }
 
-// LWGameView::LWGameView(bool btn1On, bool btn2On) : _btn1State(btn1On), _btn2State(btn2On) {
+// LongWordGameView::LongWordGameView(bool btn1On, bool btn2On) : _btn1State(btn1On), _btn2State(btn2On) {
 //   CommonInit();
 // }
 

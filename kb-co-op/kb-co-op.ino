@@ -3,23 +3,25 @@
 
 #include "HIDKeyboardParser.h"
 #include "GameState.h"
+#include "Words.h"
 
 // pin definitions - change these to match your wiring
 // E =  Green
 // RW = Yellow (-> Blue for 1 display)
 // RS = Orange
-const int D1_PIN_E = 7, D1_PIN_RW = 8, D1_PIN_RS = 5;
-const int D2_PIN_E = 3, D2_PIN_RW = 4, D2_PIN_RS = 6;
+const PROGMEM int D1_PIN_E = 10, D1_PIN_RW = 8, D1_PIN_RS = 7;
+const PROGMEM int D2_PIN_E = 5, D2_PIN_RW = 6, D2_PIN_RS = 9;
 
-const int SWITCH_PIN_1 = 9, SWITCH_PIN_2 = 10;
+// const int SWITCH_PIN_1 = 9, SWITCH_PIN_2 = 10;
 
 // ------------------------------
 // USB KEYBOARD
-USB     Usb;
+USB Usb;
 //USBHub     Hub(&Usb);
-HIDBoot<USB_HID_PROTOCOL_KEYBOARD>    HidKeyboard(&Usb);
+HIDBoot<USB_HID_PROTOCOL_KEYBOARD> HidKeyboard(&Usb);
 KeyEvents keyEvents;
 HIDKeyboardParser Prs(&keyEvents);
+
 // ------------------------------
 // DISPLAYS
 // https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#constructor-name
@@ -34,8 +36,8 @@ U8G2_ST7920_128X64_1_SW_SPI disp1(U8G2_R0, D1_PIN_E, D1_PIN_RW, D1_PIN_RS);
 U8G2_ST7920_128X64_1_SW_SPI disp2(U8G2_R0, D2_PIN_E, D2_PIN_RW, D2_PIN_RS);
 // ------------------------------
 
-const char letters[36] = {'a', 'b', 'c', 'd', 'e', 'f','g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
-String line1Str = "Nick's";
+//const char letters[36] = {'a', 'b', 'c', 'd', 'e', 'f','g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
+//String line1Str = "Nick's";
 //bool curLine = true;
 
 
@@ -48,25 +50,31 @@ void setup() {
   // initialize the pushbutton pins as an inputs:
   // pinMode(SWITCH_PIN_1, INPUT);
   // pinMode(SWITCH_PIN_2, INPUT);
+  
   game.SetupGameModes();
   game.update();
 //  game = GameState(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
+
+  
+  delay(1000);
+  Serial.begin(115200);
+  while (!Serial) yield();
+
+  Words::InitSDCard();
+  
+//  Serial.println("Keyboard Setup Start...");
+  // Keyboard setup
+  if (Usb.Init() == -1) { Serial.println("USB OSC did not start."); }
+  delay( 200 );
+//  Serial.println("USB.Init() finished");
+  HidKeyboard.SetReportParser(0, &Prs);
+//  Serial.println("Finished Setup");
 
   // Displays setup
   disp1.begin();
   disp2.begin();
 
-  // Keyboard setup
- delay(1000);
- Serial.begin(115200);
- while (!Serial) yield();
-  
-  Serial.println("Keyboard Setup Start...");
-  if (Usb.Init() == -1) { 
-    Serial.println("USB OSC did not start.");
-  }
-  delay( 200 );
-  HidKeyboard.SetReportParser(0, &Prs);
+  Words::GetRandomBalance8CharWord();
 }
 
 // void drawOnDisplay(U8G2_ST7920_128X64_1_SW_SPI disp, bool isDisp1) {
@@ -127,7 +135,8 @@ void loop() {
   // Page buffer mode (Picture Loop)
   
   // ==============================
-  game.update(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
+//  game.update(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
+  game.update();
 
   // Never Redraw both displays in the same loop!
   // Let's reserve time for the Usb.Task() to run
@@ -136,7 +145,7 @@ void loop() {
   // TODO: Try different methods to draw the displays...
   
   if (game.shouldRedrawDisp1()) {
-    Serial.println("Draw Display 1");
+//    Serial.println("Draw Display 1");
     game.displayDrawingStateChanged(true, true);
     disp1.firstPage();
     do {
@@ -151,7 +160,7 @@ void loop() {
   //       We need to store the data while the displays are updating
   
   if (game.shouldRedrawDisp2()) {
-    Serial.println("Draw Display 2");
+//    Serial.println("Draw Display 2");
     game.displayDrawingStateChanged(false, true);
     disp2.firstPage();
     do {

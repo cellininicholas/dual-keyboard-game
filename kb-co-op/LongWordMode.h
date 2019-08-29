@@ -1,11 +1,15 @@
 #if !defined(__LONGWORDMODE_H__)
 #define __LONGWORDMODE_H__
-#include "LWGameView.h"
+#include "LongWordGameView.h"
 #include "GameMode.h"
 
 class LongWordMode : public GameMode {
   private:
-    
+    const int LONG_WORD_SIZE = 32;
+    const int HISTORY_SIZE = 32;
+
+    // char *currentWord;
+    // int wordIndexHistory[];
 
   protected:
     void CommonInit() override;
