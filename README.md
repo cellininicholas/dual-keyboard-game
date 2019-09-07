@@ -1,6 +1,11 @@
 # dual-keyboard-game
 Play keyboard games together
 
+## !!! Important Notes
+
+The USB Host Shield uses pin 10 as CS. Use pin 4 as CS for the SD module.
+** SS, short for 'Slave Select' though it's more commonly called 'Chip Select' (CS), nSS or even SYNC. **
+https://arduino.stackexchange.com/questions/57401/arduino-usb-host-shield-and-sd-card
 
 ## Installation
 ### Wiring

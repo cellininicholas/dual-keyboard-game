@@ -1,7 +1,6 @@
 #include "GameState.h"
 #include <ctype.h>
 #include "LongWordMode.h"
-#include "Words.h"
 
 // ----------------------------------------------------
 // ---------------- GameViewDelegate ------------------
@@ -17,7 +16,17 @@ char * GameState::getCharacterWindow(bool isP1) {
   return isP1 ? _player1CharWindow : _player2CharWindow;
 }
 const char * GameState::getRandBalanced8CharWord() {
-  return NULL;
+  char* randWord = Words::GetRandomBalance8CharWord(randomInt(), randomInt());
+  return randWord;
+//return NULL;
+}
+uint16_t GameState::randomInt() {
+  //  extract an unsigned integer (0..65535)
+  return prng->getRndInt();
+}
+uint16_t GameState::randomInt(uint16_t min, uint16_t max) {
+  //  extract an unsigned integer (0..65535)
+  return min + (prng->getRndInt() % (max - min));
 }
 // ----------------------------------------------------
 
@@ -37,10 +46,12 @@ void GameState::InitCharBuffers() {
 }
 
 GameState::GameState() {
+  prng = new pRNG();
   InitCharBuffers();
 }
 
 GameState::GameState(bool btn1On, bool btn2On) : _btn1State(btn1On), _btn2State(btn2On) {
+  prng = new pRNG();
   //  Serial.println("GameState Init");
   InitCharBuffers();
 }

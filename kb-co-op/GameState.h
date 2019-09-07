@@ -1,7 +1,9 @@
 #if !defined(__GAMESTATE_H__)
 #define __GAMESTATE_H__
 
+#include "Words.h"
 #include "GameMode.h"
+#include "pRNG.h"
 
 // - - - - - - - - - - -
 // GameViewDelegate implements GameModeDelegate
@@ -9,6 +11,10 @@
 
 class GameState: public GameViewDelegate {
   private:
+    // ------------------------------
+    // <p>retty <R>andom <N>umber <G>enerator
+    pRNG *prng; 
+
     GameMode **gameModes;
     GameMode *currentGameMode;
 
@@ -41,16 +47,20 @@ class GameState: public GameViewDelegate {
     void InitCharBuffers();
     char* updateCharWindow(char *buf, char *window, int charIndex);
 
-    // GameViewDelegate
-    void setDisplayDirty(bool isDis1);
-    char *getCharacterBuffer(bool isP1);
-    char *getCharacterWindow(bool isP1);
-    const char *getRandBalanced8CharWord();
-
   protected:
 
   public:
   
+    // -------------------------------
+    // GameViewDelegate
+    void setDisplayDirty(bool isDis1);
+    char *getCharacterBuffer(bool isP1);
+    char *getCharacterWindow(bool isP1);
+    uint16_t randomInt();
+    uint16_t randomInt(uint16_t min, uint16_t max);
+    const char *getRandBalanced8CharWord();
+    
+    // -------------------------------
     // Initialiser
     GameState();
     GameState(bool btn1On, bool btn2On);

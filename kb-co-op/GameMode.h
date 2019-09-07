@@ -10,6 +10,7 @@ class GameMode {
   private:    
 
   protected:
+
     virtual void CommonInit();
     GameModeDelegate *modeDelegate;
 
