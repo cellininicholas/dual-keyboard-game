@@ -7,6 +7,7 @@ void GameView::CommonInit() {
 
 GameView::GameView(GameModeDelegate *del) : viewDelegate((GameViewDelegate *)del) {
   CommonInit();
+  timeStrBuf = new char[3];
 }
 
 void GameView::keyPressed(char c, int upperChar, bool isP1) {
@@ -34,9 +35,19 @@ void GameView::drawNHeartsHeight16(U8G2_ST7920_128X64_1_SW_SPI *disp, int heartC
 }
 
 void GameView::drawTimeCounter(U8G2_ST7920_128X64_1_SW_SPI *disp, int secsRemaining) {
+  sprintf(timeStrBuf, "%ds", secsRemaining);
   disp->setFontPosCenter();
+  
+  disp->setFont(u8g2_font_courB10_tr);
+  disp->drawStr(2,56,timeStrBuf); //timeStrBuf);
+  
+//  disp->setFont(u8g2_font_helvB12_te);
+//  disp->drawStr(3,56,timeStrBuf); //timeStrBuf);
+  
   disp->setFont(u8g2_font_open_iconic_app_2x_t);
-  disp->drawGlyph(2, 54, 0x0045);
+//  disp->drawGlyph(2, 54, 0x0045);
+//  disp->drawGlyph(23, 54, 0x0045);
+  disp->drawGlyph(22, 54, 0x0045);
 }
 
 // FONTS
@@ -57,7 +68,7 @@ void GameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
     drawNHearts(disp, 7);
   }
 
-  drawTimeCounter(disp, 8); // secsRemaining=8
+  drawTimeCounter(disp, 4); // secsRemaining=8
 
   // disp->setFont(u8g2_font_open_iconic_human_2x_t);
   // disp->setDrawColor(1);

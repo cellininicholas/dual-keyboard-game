@@ -1,5 +1,5 @@
 #include <U8g2lib.h>
-//#include <usbhub.h>
+#include <usbhub.h>
 
 #include "HIDKeyboardParser.h"
 #include "GameState.h"
@@ -8,8 +8,9 @@
 // E =  Green
 // RW = Yellow (-> Blue for 1 display)
 // RS = Orange
-const PROGMEM int D1_PIN_E = 11, D1_PIN_RW = 8, D1_PIN_RS = 4;
-const PROGMEM int D2_PIN_E = 5, D2_PIN_RW = 6, D2_PIN_RS = 9;
+static const PROGMEM uint8_t D1_PIN_E = 11, D1_PIN_RW = 8, D1_PIN_RS = 5;
+static const PROGMEM uint8_t D2_PIN_E = 7, D2_PIN_RW = 6, D2_PIN_RS = 9;
+static const PROGMEM uint8_t CS_PIN_SD = 4, CS_PIN_USB = 3;
 
 // const int SWITCH_PIN_1 = 9, SWITCH_PIN_2 = 10;
 
@@ -17,7 +18,7 @@ const PROGMEM int D2_PIN_E = 5, D2_PIN_RW = 6, D2_PIN_RS = 9;
 // USB KEYBOARD
 USB Usb;
 int lastUSBTaskState = 0;
-//USBHub     Hub(&Usb);
+USBHub     Hub(&Usb);
 HIDBoot<USB_HID_PROTOCOL_KEYBOARD> HidKeyboard(&Usb);
 KeyEvents keyEvents;
 HIDKeyboardParser Prs(&keyEvents);
@@ -40,29 +41,51 @@ U8G2_ST7920_128X64_1_SW_SPI disp2(U8G2_R0, D2_PIN_E, D2_PIN_RW, D2_PIN_RS);
 GameState game;
 // =========
 
+//SPISettings spiSettings(2e6, MSBFIRST, SPI_MODE3); // 2 MHz, mode 3
+
+void setSPIMode(bool SDActive) {
+  digitalWrite(CS_PIN_SD,  SDActive ? LOW : HIGH); // HIGH is INACTIVE
+  digitalWrite(CS_PIN_USB, SDActive ? LOW : HIGH); // LOW  is   ACTIVE
+}
+
 void setup() {
 
   delay(1000);
   Serial.begin(115200);
   while (!Serial) yield();
   delay( 200 );
-
-  // initialize the pushbutton pins as an inputs:
+  
+  // initialize PIN MODES
+//  pinMode(CS_PIN_SD, OUTPUT);
+//  pinMode(CS_PIN_USB, OUTPUT);
+//  digitalWrite(10, HIGH);
+//  digitalWrite(CS_PIN_SD, HIGH);
+//  digitalWrite(CS_PIN_USB, LOW);
   // pinMode(SWITCH_PIN_1, INPUT);
   // pinMode(SWITCH_PIN_2, INPUT);
+
+  Words::InitSDCard(CS_PIN_SD);
   
   game.SetupGameModes();
   game.update();
 //  game = GameState(digitalRead(SWITCH_PIN_1), digitalRead(SWITCH_PIN_2));
 
-  Words::InitSDCard();
-  String randWord = game.getRandBalanced8CharWord();
-  Serial.print("RANDOM WORD: ");
-  Serial.println(randWord);
+  // * * * * * * * * * * * * * * * *
+//  setSPIMode(true); // SDActive=true
+  // * * * * * * * * * * * * * * * *
+
+  
+//  String randWord = game.getRandBalanced8CharWord();
+//  Serial.print("RANDOM WORD: ");
+//  Serial.println(randWord);
 
   // ----------------------------------
   Serial.println("Keyboard Setup Start...");
   // Keyboard setup
+
+  // * * * * * * * * * * * * * * * *
+//  setSPIMode(false); // SDActive=false
+  // * * * * * * * * * * * * * * * *
  
   if (Usb.Init() == -1) { Serial.println("USB OSC did not start."); }
   delay( 200 );
@@ -87,6 +110,7 @@ void setup() {
   Serial.println("disp.begin() finished");
 
   Serial.println("Finished Setup");
+  delay( 2000 );
 }
 
 // void drawOnDisplay(U8G2_ST7920_128X64_1_SW_SPI disp, bool isDisp1) {
@@ -163,8 +187,6 @@ void loop() {
     lastUSBTaskState = newState;
   }
 
-//  String randWord = game.getRandBalanced8CharWord();
-//  Serial.println(randWord);
   
 //  Usb.setUsbTaskState(17); // 0x11 - USB_DETACHED_SUBSTATE_INITIALIZE
   
@@ -220,7 +242,9 @@ void KeyEvents::KeyStateChanged(char c,  bool isDown) {
 //  Serial.print(upperC);
 //  Serial.println(c);
   game.keyStateChanged(c, isDown);
-  
+
+//  String randWord = game.getRandBalanced8CharWord();
+//  Serial.println(randWord);
 }
 
 void KeyEvents::ControlKeyStateChanged(MODIFIERKEYS beforeMod, MODIFIERKEYS afterMod) {

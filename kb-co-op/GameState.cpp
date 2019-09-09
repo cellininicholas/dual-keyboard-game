@@ -18,7 +18,6 @@ char * GameState::getCharacterWindow(bool isP1) {
 const char * GameState::getRandBalanced8CharWord() {
   char* randWord = Words::GetRandomBalance8CharWord(randomInt(), randomInt());
   return randWord;
-//return NULL;
 }
 uint16_t GameState::randomInt() {
   //  extract an unsigned integer (0..65535)
@@ -60,6 +59,9 @@ void GameState::SetupGameModes() {
   gameModes = new GameMode*[1];
   gameModes[0] = new LongWordMode(this);
   currentGameMode = gameModes[0];
+
+  currentGameMode->SetupDelegates();
+  currentGameMode->ResetGameMode();
 }
 
 void GameState::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
@@ -162,6 +164,9 @@ void GameState::keyStateChanged(char c,  bool isDown) {
     }
     if (currentGameMode == NULL) { return; }
     currentGameMode->keyPressed(c, uc, isP1Char);
+
+    // IF IS DOWN
+    currentGameMode->ResetGameMode();
   }
 }
 

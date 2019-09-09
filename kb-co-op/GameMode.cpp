@@ -1,6 +1,10 @@
 #include "GameMode.h"
 // #include <ctype.h>
 
+void GameMode::SetupDelegates() {
+
+}
+
 void GameMode::CommonInit() {
   // views = new GameView[1];
   views = new GameView*[1];
@@ -10,6 +14,10 @@ void GameMode::CommonInit() {
 
 GameMode::GameMode(GameModeDelegate *del) : modeDelegate(del) {
   CommonInit();
+}
+
+void GameMode::ResetGameMode() {
+  
 }
 
 void GameMode::keyPressed(char c, int upperChar, bool isP1) {

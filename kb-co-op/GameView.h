@@ -18,6 +18,7 @@ class GameViewDelegate: public GameModeDelegate {
 
 class GameView {
   private:
+    char* timeStrBuf;
 
   protected:
     GameViewDelegate *viewDelegate;

@@ -22,9 +22,14 @@ class GameMode {
     virtual void keyPressed(char c, int upperChar, bool isP1);
     void draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1);
 
+    // -------------------------
+    virtual void ResetGameMode();
+
+    // -------------------------
     // Initialiser
     GameMode(GameModeDelegate *del);
     // GameMode(bool btn1On, bool btn2On);
+    virtual void SetupDelegates();
   
 };
 

@@ -3,9 +3,15 @@
 
 #include "GameView.h"
 
+class LongWordDelegate {
+  public:
+  virtual char* getCurrentWord();
+  virtual byte getCurrentWordMask();
+};
+
 class LongWordGameView : public GameView {
   private:
-    
+    LongWordDelegate *longWordDelegate;
 
   protected:
     void CommonInit() override;
@@ -19,7 +25,8 @@ class LongWordGameView : public GameView {
     // Initialiser
     LongWordGameView(GameModeDelegate *del);
     // LongWordGameView(bool btn1On, bool btn2On);
-  
+
+    void setLongWordDelegate(LongWordDelegate *newDel);
 };
 
 #endif // __LWGAMEVIEW_H__

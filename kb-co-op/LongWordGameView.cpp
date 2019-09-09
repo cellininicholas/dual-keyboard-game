@@ -1,6 +1,10 @@
 #include "LongWordGameView.h"
 // #include <ctype.h>
 
+void LongWordGameView::setLongWordDelegate(LongWordDelegate *newDel) {
+  longWordDelegate = newDel;
+}
+
 void LongWordGameView::CommonInit() {
   
 }
@@ -19,14 +23,16 @@ void LongWordGameView::keyPressed(char c, int upperChar, bool isP1) {
 // FONT MODE
 // https://github.com/olikraus/u8g2/wiki/u8g2reference#setfontmode
 void LongWordGameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
-  char *charWindow = viewDelegate->getCharacterWindow(isDisp1);
+//   char *charWindow = viewDelegate->getCharacterWindow(isDisp1);
+  char* curWord = longWordDelegate->getCurrentWord();
+//  char* curWord = "LONGWORD";
   
   // extern const uint8_t u8g2_font_tenstamps_mu[] U8G2_FONT_SECTION("u8g2_font_tenstamps_mu");
   disp->setDrawColor(1);
   disp->setFontPosTop();
   disp->setFont(u8g2_font_tenstamps_mu); // height=15,mu=monospace,uppercase
-  // disp->drawStr(4,22,"LONGWORD" );
-  disp->drawStr(4,22,charWindow);
+  // disp->drawStr(4,22,"LONGWORD");
+  disp->drawStr(4,22,curWord);
 
   if (!isDisp1) {
     drawNHeartsHeight8(disp, 12);
@@ -34,7 +40,7 @@ void LongWordGameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
     drawNHearts(disp, 7);
   }
 
-  drawTimeCounter(disp, 8); // secsRemaining=8
+  drawTimeCounter(disp, 3); // secsRemaining=8
 
   // disp->setFont(u8g2_font_open_iconic_human_2x_t);
   // disp->setDrawColor(1);

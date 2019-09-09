@@ -10,10 +10,22 @@ class Words {
 
    public:
   
-      static void InitSDCard() {
+      static void toUpperCase(char* wordToUpper) {
+         int i = 0;
+         while(wordToUpper[i]) {
+            if (wordToUpper[i]>=97 && wordToUpper[i]<=122) {
+               wordToUpper[i] = wordToUpper[i] - 32;
+               // printf ("\n Uppercase of Entered character is %c", Ch);
+            }
+
+            i++;
+         }
+      }
+
+      static void InitSDCard(uint8_t SD_CS_PIN_NUM) {
          Serial.print("Initializing SD card...");
          int failures = 0;
-         while (!SD.begin(7)) {
+         while (!SD.begin(SD_CS_PIN_NUM)) {
             failures = failures + 1;
             Serial.print("initialization #");
             Serial.print(failures);
@@ -30,6 +42,10 @@ class Words {
       }
 
       static char * GetRandomBalance8CharWord(uint16_t rand1, uint16_t rand2) {
+        return GetRandomBalance8CharWord(rand1, rand2, 0);
+      }
+
+      static char * GetRandomBalance8CharWord(uint16_t rand1, uint16_t rand2, uint8_t attemptNum) {
          
          // 8bal00.txt
          char filenameBuffer [10];
@@ -57,20 +73,27 @@ class Words {
 
             // TODO: Randomly select a word from the readBuf
             char* randomlySelectedWord = new char[9]; // 8 + null char
-            randomlySelectedWord[9] = '\0'; // null character manually added
+            randomlySelectedWord[8] = '\0'; // null character manually added
             int totalWords = 10;
             int randWordIndex = rand2 % (totalWords-1);
             strncpy ( randomlySelectedWord, readBuf + (9*randWordIndex), 8);
 
             delete[] readBuf;
 
+            toUpperCase(randomlySelectedWord);
             return randomlySelectedWord;
 
          } else {
 //            EndSDCard();
+            attemptNum = attemptNum + 1;
+
             // if the file didn't open, print an error:
             Serial.print("error opening ");
-            Serial.println(filenameBuffer);
+            Serial.print(filenameBuffer);
+            Serial.print(" ATTEMPT ");
+            Serial.println(attemptNum + 1);
+
+            if (attemptNum < 3) { return GetRandomBalance8CharWord(rand1, rand2, attemptNum); }
          }
 
          return NULL;
