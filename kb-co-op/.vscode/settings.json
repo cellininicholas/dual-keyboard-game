@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "istream": "cpp",
+        "*.tcc": "cpp",
+        "__hash_table": "cpp",
+        "__split_buffer": "cpp",
+        "initializer_list": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "utility": "cpp",
+        "vector": "cpp",
+        "array": "cpp",
+        "bitset": "cpp",
+        "iterator": "cpp",
+        "unordered_map": "cpp",
+        "hashtable": "cpp",
+        "sstream": "cpp"
+    }
+}
