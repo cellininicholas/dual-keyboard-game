@@ -3,15 +3,15 @@
 
 #include "GameView.h"
 
-class LongWordDelegate {
-  public:
-  virtual char* getCurrentWord();
-  virtual byte getCurrentWordMask();
-};
+// class LongWordDelegate {
+//   public:
+//   virtual char* getCurrentWord();
+//   virtual byte getCurrentWordMask();
+// };
 
 class LongWordGameView : public GameView {
   private:
-    LongWordDelegate *longWordDelegate;
+    // LongWordDelegate *longWordDelegate;
 
   protected:
     void CommonInit() override;

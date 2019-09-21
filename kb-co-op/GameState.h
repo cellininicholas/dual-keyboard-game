@@ -11,6 +11,11 @@
 
 class GameState: public GameViewDelegate {
   private:
+    const int CHAR_BUFFER_SIZE = 16;
+    const int CHAR_WINDOW_SIZE = 8;
+    const int GAME_STR_SIZE = 64;
+    const int HISTORY_SIZE = 32;
+    
     // ------------------------------
     // <p>retty <R>andom <N>umber <G>enerator
     pRNG *prng; 
@@ -18,11 +23,21 @@ class GameState: public GameViewDelegate {
     GameMode **gameModes;
     GameMode *currentGameMode;
 
-    const int CHAR_BUFFER_SIZE = 16;
-    const int CHAR_WINDOW_SIZE = 8;
-  
     // HARDWARE
     int _btn1State, _btn2State;
+
+    // -----------
+    bool *_characterSplit;
+
+    char *_curGameString;
+    char *_curGameStringDrawBuffer;
+
+    long _timeElapsed;
+    long _timeElapsedDrawBuffer;
+    
+    // char* timeStrBuf;
+    // int wordIndexHistory[];
+    // -----------
   
     // -----------
     bool _disp1IsDrawing = false;
@@ -38,13 +53,8 @@ class GameState: public GameViewDelegate {
     // it will point to the last N characters in the right order
     char *_player1CharWindow;
     char *_player2CharWindow;
-  
-    // how long to spend at each step - higher wait_time = slower rotation
-//    const int wait_time = 99;
-//    int _wait_progress = 0;
-//    int _curCharIndex = 0;
 
-    void InitCharBuffers();
+    void CommonInit();
     char* updateCharWindow(char *buf, char *window, int charIndex);
 
   protected:
@@ -54,6 +64,10 @@ class GameState: public GameViewDelegate {
     // -------------------------------
     // GameViewDelegate
     void setDisplayDirty(bool isDis1);
+    bool isDisplayDrawing(bool disp1);
+    char* getCurrentGameString(bool getDrawBufData);
+    bool* getCharacterSplit();
+    long getTimeElapsed(bool getDrawBufData);
     char *getCharacterBuffer(bool isP1);
     char *getCharacterWindow(bool isP1);
     uint16_t randomInt();

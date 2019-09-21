@@ -9,6 +9,21 @@ void GameState::setDisplayDirty(bool isDis1) {
   if (isDis1) { _disp1DatDirty = true; } 
   else        { _disp2DatDirty = true; }
 }
+bool GameState::isDisplayDrawing(bool disp1) {
+  if (disp1) { return _disp1IsDrawing; } 
+  else       { return _disp2IsDrawing; }
+}
+char* GameState::getCurrentGameString(bool getDrawBufData) {
+  if (getDrawBufData) { return _curGameString; } 
+  else       { return _curGameStringDrawBuffer; }
+}
+bool* GameState::getCharacterSplit() {
+  return _characterSplit;
+}
+long GameState::getTimeElapsed(bool getDrawBufData) {
+  if (getDrawBufData) { return _timeElapsed; } 
+  else       { return _timeElapsedDrawBuffer; }
+}
 char * GameState::getCharacterBuffer(bool isP1) {
   return isP1 ? _player1CharBuffer : _player2CharBuffer;
 }
@@ -29,7 +44,7 @@ uint16_t GameState::randomInt(uint16_t min, uint16_t max) {
 }
 // ----------------------------------------------------
 
-void GameState::InitCharBuffers() {
+void GameState::CommonInit() {
   _player1CharBuffer = new char[CHAR_BUFFER_SIZE];
   _player2CharBuffer = new char[CHAR_BUFFER_SIZE];
   _player1CharWindow = new char[CHAR_WINDOW_SIZE];
@@ -42,17 +57,32 @@ void GameState::InitCharBuffers() {
       _player2CharWindow[i] = ' ';
     }
   }
+
+  _characterSplit = new bool[GAME_STR_SIZE];
+  for (int i = 0; i < GAME_STR_SIZE; i++) {
+    _characterSplit[i] = true;
+  }
+
+  _curGameString = new char[GAME_STR_SIZE];
+  _curGameStringDrawBuffer = new char[GAME_STR_SIZE];
+  strcpy(_curGameString, "?UNKNOWN");
+  strcpy(_curGameStringDrawBuffer, "?UNKNOWN");
+  _curGameString[8] = '\0';
+  _curGameStringDrawBuffer[8] = '\0';
+
+  _timeElapsed = 800;
+  _timeElapsedDrawBuffer = 800;
 }
 
 GameState::GameState() {
   prng = new pRNG();
-  InitCharBuffers();
+  CommonInit();
 }
 
 GameState::GameState(bool btn1On, bool btn2On) : _btn1State(btn1On), _btn2State(btn2On) {
   prng = new pRNG();
   //  Serial.println("GameState Init");
-  InitCharBuffers();
+  CommonInit();
 }
 
 void GameState::SetupGameModes() {

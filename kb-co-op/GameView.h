@@ -6,19 +6,27 @@
 class GameModeDelegate {
   public:
   virtual void setDisplayDirty(bool isDis1);
+  virtual bool isDisplayDrawing(bool disp1);
+
+  virtual char* getCurrentGameString(bool getDrawBufData);
+  virtual bool* getCharacterSplit();
+  virtual long getTimeElapsed(bool getDrawBufData);
+
   virtual char *getCharacterBuffer(bool isP1);
   virtual char *getCharacterWindow(bool isP1);
+
   virtual const char *getRandBalanced8CharWord();
 };
 
 class GameViewDelegate: public GameModeDelegate {
   public:
-  // virtual (char *) GetCharacterBuffer(bool isP1);
+  virtual char* getCurrentWord();
+  virtual byte getCurrentWordMask();
 };
 
 class GameView {
   private:
-    char* timeStrBuf;
+    
 
   protected:
     GameViewDelegate *viewDelegate;

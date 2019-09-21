@@ -23,6 +23,8 @@ void LongWordGameView::keyPressed(char c, int upperChar, bool isP1) {
 // FONT MODE
 // https://github.com/olikraus/u8g2/wiki/u8g2reference#setfontmode
 void LongWordGameView::draw(U8G2_ST7920_128X64_1_SW_SPI *disp, bool isDisp1) {
+
+  
 //   char *charWindow = viewDelegate->getCharacterWindow(isDisp1);
   char* curWord = longWordDelegate->getCurrentWord();
 //  char* curWord = "LONGWORD";

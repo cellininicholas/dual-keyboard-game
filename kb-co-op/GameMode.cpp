@@ -10,6 +10,8 @@ void GameMode::CommonInit() {
   views = new GameView*[1];
   views[0] = new GameView(modeDelegate);
   currentView = views[0];
+
+  // wordIndexHistory = new int[HISTORY_SIZE];
 }
 
 GameMode::GameMode(GameModeDelegate *del) : modeDelegate(del) {

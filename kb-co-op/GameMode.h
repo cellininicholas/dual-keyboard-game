@@ -7,9 +7,9 @@
 // - - - - - - - - - - -
 
 class GameMode {
-  private:    
+  private:
 
-  protected:
+  protected:  
 
     virtual void CommonInit();
     GameModeDelegate *modeDelegate;

@@ -6,10 +6,7 @@ void LongWordMode::CommonInit() {
   views[0] = new LongWordGameView(modeDelegate);
   currentView = views[0];
 
-  currentWord = new char[LONG_WORD_SIZE];
-  strcpy(currentWord, "?UNKNOWN");
-  currentWord[8] = '\0';
-  // wordIndexHistory = new int[HISTORY_SIZE];
+  
 }
 
 void LongWordMode::SetupDelegates() {

@@ -5,13 +5,6 @@
 
 class LongWordMode : public GameMode, LongWordDelegate {
   private:
-    const int LONG_WORD_SIZE = 10;
-    const int HISTORY_SIZE = 32;
-
-    // A bitmask to illustrate which player is assigned which character in the current word
-    byte characterSplit;
-    char *currentWord;
-    // int wordIndexHistory[];
 
   protected:
     void CommonInit() override;
